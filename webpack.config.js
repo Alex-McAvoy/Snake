@@ -1,17 +1,41 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const EslintWebpackPlugin = require("eslint-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
-const stylesHandler = MiniCssExtractPlugin.loader;
+const commonCssLoader = [
+  MiniCssExtractPlugin.loader,
+  "css-loader",
+  { //css兼容性处理
+    "loader": "postcss-loader",
+    "options": {
+      "postcssOptions": {
+        "plugins": [
+          [
+            "postcss-preset-env", {
+              "browsers": "last 2 versions"
+            }
+          ]
+        ]
+      }
+    }
+  }
+];
+
 
 const config = {
-  entry: "./src/index.ts",
+  entry: { 
+    "main1": path.resolve(__dirname, "./src/index.ts"),
+    // "main2": resolve(__dirname, "src/entry2.js")
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
+    "filename": "js/[name].[contenthash:10].min.js",
   },
-  devServer: { //npx webpack-dev-server
+  devServer: {
     open: true,
     host: "localhost",
     port: 3000,
@@ -21,7 +45,15 @@ const config = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      "filename": "css/built.[contenthash:10].min.css"
+    }),
+    new CleanWebpackPlugin(),
+    new EslintWebpackPlugin({
+      "extensions": "js",
+      "exclude": "/node_modules/",
+      "fix": true
+    }),
   ],
   module: {
     rules: [
@@ -32,24 +64,11 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler, "css-loader"],
+        use: [...commonCssLoader],
       },
       {
         test: /\.less$/i,
-        use: [stylesHandler, "css-loader", {
-          loader: "postcss-loader",
-          options: {
-            postcssOptions: {
-              plugins: [
-                [
-                  "postcss-preset-env",{
-                    browsers: "last 2 versions"
-                  }
-                ]
-              ]
-            }
-          }
-        }, "less-loader"],
+        use: [...commonCssLoader, "less-loader"],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
