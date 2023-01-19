@@ -27,3 +27,5 @@ class Food {
         this.element.style.top = top + "px";
     }
 }
+
+export default Food;
