@@ -1,3 +1,5 @@
+import './css/reset.css'
 import './less/index.less';
+import GameControl from './ts/GameControl';
 
-console.log("Hello World!");
+new GameControl();
