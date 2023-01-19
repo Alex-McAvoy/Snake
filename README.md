@@ -1,15 +1,16 @@
-# 🚀 Welcome to your new awesome project!
+# Snake
 
-This project has been created using **webpack-cli**, you can now run
+基于 TypeScript 的贪吃蛇
 
-```
-npm run build
-```
-
-or
+启动开发服务器
 
 ```
-yarn build
+npm start
 ```
 
-to bundle your application
+打包
+
+```
+npm run build:dev
+npm run build:prod
+```
