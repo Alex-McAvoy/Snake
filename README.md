@@ -1,6 +1,6 @@
 # Snake
 
-基于 TypeScript 的贪吃蛇
+练习 TypeScript 项目，贪吃蛇
 
 启动开发服务器
 
